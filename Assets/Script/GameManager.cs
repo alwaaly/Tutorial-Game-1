@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour {
         //pointTextMesh.text = Point + "/" + levelTargetPoint;
         lastTimeUpdate = -10;
         levelTargetPoint = ItemsPoint;
+        pointTextMesh.text = Point + "/" + levelTargetPoint;
     }
     private void Update() {
         remainingTime -= Time.deltaTime;

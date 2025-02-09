@@ -10,7 +10,9 @@ public static class SaveSystem {
             if (data != null) completeTime = data.CompleteTime;
         }
         else {
-            if(completeTime > data.CompleteTime && data.CompleteTime != 0) completeTime = data.CompleteTime;
+            if (completeTime > data.CompleteTime && data.CompleteTime != 0) {
+                if (data != null) completeTime = data.CompleteTime;
+            }
         }
 
         string path = Application.persistentDataPath + "/Data.bi";
