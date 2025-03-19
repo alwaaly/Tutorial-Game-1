@@ -52,7 +52,11 @@ public class UIManager : MonoBehaviour {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
-
+    public void OpenWindow() {
+        settingPanel.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
     public void OnSoundEffectVolumeChange() {
         for (int i = 0; i < soundEffectSource.Length; i++) {
             soundEffectSource[i].volume = soundEffectSlider.value;

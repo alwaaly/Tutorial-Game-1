@@ -3,8 +3,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class EndSceneText : MonoBehaviour {
-    public TextMeshProUGUI text;
+    public TextMeshProUGUI BestResult;
+    public TextMeshProUGUI CurrentResult;
     public void RePlay() {
+        SaveSystem.Save(0);
+        SceneManager.LoadScene(1);
+    }
+    public void MainMenu() {
         SaveSystem.Save(0);
         SceneManager.LoadScene(0);
     }

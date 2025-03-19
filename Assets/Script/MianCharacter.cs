@@ -4,7 +4,7 @@ using UnityEngine;
 public class MianCharacter : MonoBehaviour {
     [SerializeField] float movmentSpeed;
     [SerializeField] Transform pivot;
-    [SerializeField] Transform hook;
+    public Transform hook;
     [SerializeField] float defoaltHookSpeed = 10;
     [SerializeField] Transform mainPlaneBody;
     float hookSpeed;
@@ -19,6 +19,7 @@ public class MianCharacter : MonoBehaviour {
     enum HookState { Returned , Throwing , Returing };
     [SerializeField] HookState hookState;
     Item collectedItem;
+    UI_WorldButton worldButton;
 
     [SerializeField] ParticleSystem hookParticle;
     [SerializeField] AudioSource source;
@@ -26,7 +27,12 @@ public class MianCharacter : MonoBehaviour {
     [SerializeField] AudioClip pullingRopelip;
 
     float hookDefaultYPos;
+    public event System.Action OnCollect;
+
+    public static MianCharacter Instance;
     private void Awake() {
+        Instance = this;
+
         hookRotationDirection = 1;
         hookState = HookState.Returned;
 
@@ -34,8 +40,16 @@ public class MianCharacter : MonoBehaviour {
         hookSpeed = defoaltHookSpeed;
         closeHook.SetActive(false);
         openHook.SetActive(true);
+
+        GameManager.Instance.OnTimeEnd += Instance_OnTimeEnd;
     }
+    bool isTimeEnd;
+    private void Instance_OnTimeEnd() {
+        isTimeEnd = true;
+    }
+
     private void Update() {
+        if (isTimeEnd) return;
         HandelPostion();
         HandelPivotRotation();
         HandelHookState();
@@ -68,6 +82,11 @@ public class MianCharacter : MonoBehaviour {
                 hookSpeed = defoaltHookSpeed;
                 source.Pause();
                 OpenHook();
+            }
+            else if(worldButton != null) {
+                worldButton.OnCollect();
+                worldButton.InvokeAction();
+                worldButton = null;
             }
         }
     }
@@ -117,6 +136,19 @@ public class MianCharacter : MonoBehaviour {
         }
     }
     private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.layer == 5) {
+            hookParticle.transform.position = hook.position;
+            source.clip = CatchClip;
+            source.Play();
+
+            hookState = HookState.Returing;
+            worldButton = other.gameObject.GetComponent<UI_WorldButton>();
+
+            worldButton.IsCatch = true;
+
+            return;
+        }
+
         if (!other.TryGetComponent(out Item component)) {
             hookState = HookState.Returing;
             return; 

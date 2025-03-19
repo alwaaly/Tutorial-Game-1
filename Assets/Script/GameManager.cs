@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour {
 
     float lastTimeUpdate;
 
+    public event System.Action OnTimeEnd;
 
     [SerializeField] int ItemsPoint;
     private void Awake() {
@@ -34,13 +35,23 @@ public class GameManager : MonoBehaviour {
         else Debug.LogError("There is more then one GameManager");
         if(canGenerate) GenerateItem();
         remainingTime = levelTime;
-        //pointTextMesh.text = Point + "/" + levelTargetPoint;
+        //pointTextMesh.BestResult = Point + "/" + levelTargetPoint;
         lastTimeUpdate = -10;
         levelTargetPoint = ItemsPoint;
         pointTextMesh.text = Point + "/" + levelTargetPoint;
     }
+    bool isTimeEnd;
     private void Update() {
+        if (SceneManager.GetActiveScene().buildIndex == 0) return;
         remainingTime -= Time.deltaTime;
+        if (remainingTime <= 0) {
+            if (!isTimeEnd) {
+                OnTimeEnd?.Invoke();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                isTimeEnd = true;
+            }
+            return;
+        }
         if (Time.time >= lastTimeUpdate + 1) {
             timeTextMesh.text = TimeFormat(remainingTime);
             lastTimeUpdate = Time.time;
