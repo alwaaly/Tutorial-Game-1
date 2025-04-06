@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.Progress;
 
 public class GameManager : MonoBehaviour {
     [SerializeField] int Point;
@@ -89,7 +90,8 @@ public class GameManager : MonoBehaviour {
             Test(star);
         }
     }
-
+    Item[] items;
+    int itemsCount;
     private void Test(Item[] items) {
         Item item = Instantiate(items[Random.Range(0, items.Length)]);
         if (item.CanRotate) item.transform.rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
@@ -114,9 +116,20 @@ public class GameManager : MonoBehaviour {
         }
         GeneratedItems.Add(item);
         ItemsPoint += item.basePoint;
+
+        #region The Secound Way
+        /* note that you need to add async keyword to the function to remove the error */
+
+        //Item item = Instantiate(items[Random.Range(0, items.Length)]);
+        //if (item.CanRotate) item.transform.rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
+        //item.transform.localScale = Vector3.one * Random.Range(item.minMaxScale.x, item.minMaxScale.y);
+        //item.transform.position = new Vector3(Random.Range(downLeft.x, topRight.x), Random.Range(downLeft.y, topRight.y), 0);
+        //await Awaitable.NextFrameAsync();
         //do {
         //    item.transform.position = new Vector3(Random.Range(downLeft.x, topRight.x), Random.Range(downLeft.y, topRight.y), 0);
         //} while (item.IsOverlapWithOtherObject());
+        //ItemsPoint += item.basePoint;
+        #endregion
     }
 
     [ContextMenu("CollectItemsPoint")]

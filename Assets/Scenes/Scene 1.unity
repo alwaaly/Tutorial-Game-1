@@ -18000,7 +18000,7 @@ MonoBehaviour:
   star:
   - {fileID: 3688636499183094415, guid: 19603b485cdbe8341818b134d6682305, type: 3}
   starCount: 2
-  ItemsPoint: 0
+  ItemsPoint: 1000
 --- !u!4 &1872332831
 Transform:
   m_ObjectHideFlags: 0
